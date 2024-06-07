@@ -18,7 +18,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:padding="5dp"
-            app:srcCompat="@drawable/icon_close" />
+            app:srcCompat="@drawable/ic_close" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="13dp"
-                android:src="@drawable/icon_camera" />
+                android:src="@drawable/ic_camera" />
 
         </androidx.cardview.widget.CardView>
 
