@@ -13,6 +13,9 @@
         android:theme="@style/Theme.QuanLyDanhBa"
         tools:targetApi="31">
         <activity
+            android:name=".suanv"
+            android:exported="false" />
+        <activity
             android:name=".xemdv"
             android:exported="false"
             android:theme="@style/Theme.QuanLyDanhBa" />
