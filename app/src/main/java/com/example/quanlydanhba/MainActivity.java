@@ -24,6 +24,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ListView lv;
+    ArrayList<String> mylist;
+    ArrayAdapter<String> myadapter;
     ContactAdapter contactAdapter;
     SQLiteDatabase mydatabase;
     FloatingActionButton btnThem;
@@ -35,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv=findViewById(R.id.lv);
-        contactAdapter = new ContactAdapter(this, new ArrayList<>());
-        lv.setAdapter(contactAdapter);
+        mylist = new ArrayList<>();
+        myadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mylist);
+        lv.setAdapter(myadapter);;
         btnThem = findViewById(R.id.btnThem);
         tabLayout = findViewById(R.id.tabLayout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -69,24 +72,12 @@ public class MainActivity extends AppCompatActivity {
             mydatabase.execSQL(sql1);
             Log.d("DBTEST", "Table created");
         }catch (Exception e){
+
             Log.e("Error", "Table da ton tai");
         }
+        reload("donvi");
         // Bắt sự kiện đổi tab
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                loadContacts(tab.getPosition());
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-        loadContacts(0);
     }
     private void loadContacts(int tabPosition) {
         String tableName = (tabPosition == 0) ? "donvi" : "nhanvien"; // Tên bảng trong database
@@ -122,5 +113,21 @@ public class MainActivity extends AppCompatActivity {
         contactAdapter.clear();
         contactAdapter.addAll(contacts);
         contactAdapter.notifyDataSetChanged();
+    }
+    public  void reload(String tablename){
+        mylist.clear();
+        Cursor c = mydatabase.query(tablename,null,null,null,null,null,null);
+        c.moveToNext();
+        String data = "";
+        while(!c.isAfterLast()){
+            data = c.getString(0)+ " - "+ c.getString(1)+" - "+c.getString(2);
+            c.moveToNext();
+            mylist.add(data);
+            Log.d("testt",data);
+
+        }
+
+        c.close();
+        myadapter.notifyDataSetChanged();
     }
 }

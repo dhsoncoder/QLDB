@@ -9,7 +9,7 @@
     tools:context=".themdv">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/btnLuu"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,12 +1,14 @@
 package com.example.quanlydanhba;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,17 +17,40 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class themdv extends AppCompatActivity {
-    ImageView btnThoat,imageView;
+    ImageView btnThoat,btnLuu;
     private EditText edtTenDV, edtWebDV, edtSDTDV, edtEmailDV, edtDiaChi, edtDVC;
+    private int madv;
+    private String[] cameraPermission;
+    private String[] storagePermission;
 
     private boolean isAllFieldsFilled = false;
+
+    //khai bao cac bien cua object
+    private String tendv,email,website,logo,diachi,sdt,madvcha;
+
+    //permission constant
+    private static final int CAMERA_PERMISSION_CODE = 100;
+    private static final int STORAGE_PERMISSION_CODE = 200;
+    private static final int IMAGE_FROM_GALLERY_CODE = 300;
+    private static final int IMAGE_FROM_CAMERA_CODE = 400;
+    // string array of permission
+
+    //Image uri var
+    private Uri imageUri;
+
+    //database helper
+    private DbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_themdv);
-        imageView = findViewById(R.id.imageView);
+
+        //init db
+        dbHelper = new DbHelper(this);
+
+        btnLuu = findViewById(R.id.btnLuu);
         btnThoat = findViewById(R.id.btnThoat);
         edtTenDV = findViewById(R.id.edtTenDV);
         edtWebDV = findViewById(R.id.edtWebDV);
@@ -61,6 +86,30 @@ public class themdv extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnLuu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveData();
+            }
+        });
+    }
+    private void saveData() {
+        tendv = edtTenDV.getText().toString().trim();
+        email = edtEmailDV.getText().toString().trim();
+        website = edtWebDV.getText().toString().trim();
+        diachi = edtDiaChi.getText().toString().trim();
+        sdt = edtSDTDV.getText().toString().trim();
+        madvcha = edtDVC.getText().toString().trim();
+        long id =  dbHelper.insertContact(
+                ""+imageUri,
+                ""+tendv,
+                ""+sdt,
+                ""+email,
+                ""+website,
+                ""+diachi,
+                ""+madvcha);
+        Toast.makeText(getApplicationContext(), "Inserted "+id, Toast.LENGTH_SHORT).show();
+
     }
     private final TextWatcher watcher = new TextWatcher() {
         @Override
@@ -88,9 +137,9 @@ public class themdv extends AppCompatActivity {
 
         // If all fields are filled, change the icon of imageView to ic_done_green
         if (isAllFieldsFilled) {
-            imageView.setImageResource(R.drawable.ic_done_green);
+            btnLuu.setImageResource(R.drawable.ic_done_green);
         } else {
-            imageView.setImageResource(R.drawable.ic_done); // Change back to the original icon
+            btnLuu.setImageResource(R.drawable.ic_done); // Change back to the original icon
         }
     }
 }
