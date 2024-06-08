@@ -3,15 +3,13 @@ package com.example.quanlydanhba;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class DbHelper extends SQLiteOpenHelper {
-    public DbHelper(@Nullable Context context ) {
+public class DbHelperNV extends SQLiteOpenHelper {
+    public DbHelperNV(@Nullable Context context) {
         super(context, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
     }
 

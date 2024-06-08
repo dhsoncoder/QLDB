@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    ListView lv;
+    ListView lvDonVi;
     ArrayList<String> mylist;
     ArrayAdapter<String> myadapter;
-    ContactAdapter contactAdapter;
+
+    DbHelper dbHelper;
     SQLiteDatabase mydatabase;
     FloatingActionButton btnThem;
     TabLayout tabLayout;
@@ -36,10 +38,11 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        lv=findViewById(R.id.lv);
-        mylist = new ArrayList<>();
-        myadapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mylist);
-        lv.setAdapter(myadapter);;
+        dbHelper = new DbHelper(this);
+
+        lvDonVi =findViewById(R.id.lv);
+        hienThiDanhSachDonVi();
+
         btnThem = findViewById(R.id.btnThem);
         tabLayout = findViewById(R.id.tabLayout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -62,72 +65,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        // Mở database
-        mydatabase = openOrCreateDatabase("qldb.db", MODE_PRIVATE, null);
+        // Bắt sự kiện click vào item trên listview sẽ đổi sang view chi tiet donvi
+        lvDonVi.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(MainActivity.this, xemdv.class);
+            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
-        try {
-            String sql ="CREATE TABLE donvi (madv INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, tendv TEXT NOT NULL, email TEXT NOT NULL, website TEXT, logo TEXT, diachi TEXT NOT NULL, sdt TEXT NOT NULL, madvcha INTEGER NOT NULL)";
-            String sql1 = "CREATE TABLE nhanvien (manv INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hoten TEXT NOT NULL, chucvu TEXT, email TEXT NOT NULL, sdt TEXT NOT NULL, anhdd TEXT NOT NULL, madv INTEGER NOT NULL, FOREIGN KEY (madv) REFERENCES donvi(madv))";
-            mydatabase.execSQL(sql);
-            mydatabase.execSQL(sql1);
-            Log.d("DBTEST", "Table created");
-        }catch (Exception e){
+            int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));
+            intent.putExtra("donviId", donviId);
+            startActivity(intent);
+        });
 
-            Log.e("Error", "Table da ton tai");
-        }
-        reload("donvi");
         // Bắt sự kiện đổi tab
 
+
     }
-    private void loadContacts(int tabPosition) {
-        String tableName = (tabPosition == 0) ? "donvi" : "nhanvien"; // Tên bảng trong database
-        String query;
-        if (tabPosition == 0) {
-            // Truy vấn tên đơn vị
-            query = "SELECT tendv FROM " + tableName + " ORDER BY tendv ASC";
-        } else {
-            // Truy vấn tên nhân viên và tên đơn vị
-            query = "SELECT hoten, tendv FROM nhanvien nv " +
-                    "JOIN donvi dv ON nv.madv = dv.madv " +
-                    "ORDER BY hoten ASC";
-        }
-        Cursor cursor = mydatabase.rawQuery(query, null);
+    private void hienThiDanhSachDonVi() {
+        Cursor cursor = dbHelper.getAllDonVi();
 
-        List<Contact> contacts = new ArrayList<>();
-        if (tabPosition == 0) {
-            // Tạo đối tượng Contact cho đơn vị
-            while (cursor.moveToNext()) {
-                String tenDonVi = cursor.getString(cursor.getColumnIndexOrThrow("tendv"));
-                contacts.add(new Contact(tenDonVi));
-            }
-        } else {
-            // Tạo đối tượng Contact cho nhân viên
-            while (cursor.moveToNext()) {
-                String tenNhanVien = cursor.getString(cursor.getColumnIndexOrThrow("hoten"));
-                String tenDonVi = cursor.getString(cursor.getColumnIndexOrThrow("tendv"));
-                contacts.add(new Contact(tenNhanVien, tenDonVi));
-            }
-        }
-        cursor.close();
+        // Sử dụng các hằng số từ lớp Constants
+        String[] fromColumns = {Constants.dv_tendv, Constants.dv_email};
+        int[] toViews = {R.id.ten_don_vi_textview, R.id.email_don_vi_textview}; // ID của các TextView trong don_vi_item.xml
 
-        contactAdapter.clear();
-        contactAdapter.addAll(contacts);
-        contactAdapter.notifyDataSetChanged();
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.don_vi_item, cursor, fromColumns, toViews, 0);
+        lvDonVi.setAdapter(adapter);
     }
-    public  void reload(String tablename){
-        mylist.clear();
-        Cursor c = mydatabase.query(tablename,null,null,null,null,null,null);
-        c.moveToNext();
-        String data = "";
-        while(!c.isAfterLast()){
-            data = c.getString(0)+ " - "+ c.getString(1)+" - "+c.getString(2);
-            c.moveToNext();
-            mylist.add(data);
-            Log.d("testt",data);
 
-        }
-
-        c.close();
-        myadapter.notifyDataSetChanged();
     }
-}
+

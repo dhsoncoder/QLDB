@@ -23,14 +23,14 @@ public class themnv extends AppCompatActivity {
     EditText edtTenNV, edtChucVu, edtSDT, edtEmail;
     Spinner spinnerDonVi;
     private boolean isAllFieldsFilled = false;
-    DatabaseHelper databaseHelper;
+    DbHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_themnv);
 
-        databaseHelper = new DatabaseHelper(this);
+        databaseHelper = new DbHelper(this);
 
         btnThoat = findViewById(R.id.btnThoat);
         btnLuu = findViewById(R.id.btnLuu);

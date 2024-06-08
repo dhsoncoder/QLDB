@@ -1,10 +1,10 @@
 package com.example.quanlydanhba;
 
 public class donvi {
-    private int madv;
-    private String tendv,email,website,logo,diachi,sdt,madvcha;
+    private int madv,madvcha;
+    private String tendv,email,website,logo,diachi,sdt;
 
-    public donvi(int madv, String tendv, String email, String website, String logo, String diachi, String sdt, String madvcha) {
+    public donvi(int madv, String tendv, String email, String website, String logo, String diachi, String sdt, int madvcha) {
         this.madv = madv;
         this.tendv = tendv;
         this.email = email;
@@ -71,11 +71,11 @@ public class donvi {
         this.sdt = sdt;
     }
 
-    public String getMadvcha() {
+    public int getMadvcha() {
         return madvcha;
     }
 
-    public void setMadvcha(String madvcha) {
+    public void setMadvcha(int madvcha) {
         this.madvcha = madvcha;
     }
 }
