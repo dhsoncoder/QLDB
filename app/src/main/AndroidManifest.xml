@@ -20,6 +20,9 @@
             android:exported="false"
             android:theme="@style/Theme.QuanLyDanhBa" />
         <activity
+            android:name=".activity_xemdv"
+            android:exported="false" />
+        <activity
             android:name=".activity_xemnv"
             android:exported="false" />
         <activity
