@@ -63,8 +63,11 @@ public class MainActivity extends AppCompatActivity {
         mydatabase = openOrCreateDatabase("qldb.db", MODE_PRIVATE, null);
 
         try {
-            String sql ="CREATE TABLE tbllop(malop TEXT primary key, tenlop TEXT, siso INTEGER)";
+            String sql ="CREATE TABLE donvi (madv INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, tendv TEXT NOT NULL, email TEXT NOT NULL, website TEXT, logo TEXT, diachi TEXT NOT NULL, sdt TEXT NOT NULL, madvcha INTEGER NOT NULL)";
+            String sql1 = "CREATE TABLE nhanvien (manv INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, hoten TEXT NOT NULL, chucvu TEXT, email TEXT NOT NULL, sdt TEXT NOT NULL, anhdd TEXT NOT NULL, madv INTEGER NOT NULL, FOREIGN KEY (madv) REFERENCES donvi(madv))";
             mydatabase.execSQL(sql);
+            mydatabase.execSQL(sql1);
+            Log.d("DBTEST", "Table created");
         }catch (Exception e){
             Log.e("Error", "Table da ton tai");
         }

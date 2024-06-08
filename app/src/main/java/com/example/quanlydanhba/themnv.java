@@ -1,6 +1,8 @@
 package com.example.quanlydanhba;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,20 +21,24 @@ import androidx.core.view.WindowInsetsCompat;
 public class themnv extends AppCompatActivity {
     ImageView btnThoat,btnLuu;
     EditText edtTenNV, edtChucVu, edtSDT, edtEmail;
-    Spinner spinner;
+    Spinner spinnerDonVi;
     private boolean isAllFieldsFilled = false;
+    DatabaseHelper databaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_themnv);
+
+        databaseHelper = new DatabaseHelper(this);
+
         btnThoat = findViewById(R.id.btnThoat);
         btnLuu = findViewById(R.id.btnLuu);
         edtTenNV = findViewById(R.id.edtTenNV);
         edtChucVu = findViewById(R.id.edtChucVu);
         edtSDT = findViewById(R.id.edtSDT);
         edtEmail = findViewById(R.id.edtEmail);
-        spinner = findViewById(R.id.spinner);
+        spinnerDonVi = findViewById(R.id.spinner);
 
         // Set a TextWatcher for each EditText
         edtTenNV.addTextChangedListener(watcher);
@@ -56,6 +63,37 @@ public class themnv extends AppCompatActivity {
                 Intent intent;
                 intent = new Intent(themnv.this, MainActivity.class);
                 startActivity(intent);
+            }
+        });
+        btnLuu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tenNV = edtTenNV.getText().toString();
+                String chucVu = edtChucVu.getText().toString();
+                String sdt = edtSDT.getText().toString();
+                String email = edtEmail.getText().toString();
+                int madv = spinnerDonVi.getSelectedItemPosition(); // Giả sử Spinner trả về madv
+
+                if (tenNV.isEmpty() || sdt.isEmpty() || email.isEmpty()) {
+                    Toast.makeText(themnv.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("hoten", tenNV);
+                values.put("chucvu", chucVu);
+                values.put("email", email);
+                values.put("sdt", sdt);
+                values.put("anhdd", ""); // Thay thế bằng đường dẫn ảnh nếu có
+                values.put("madv", madv);
+                long newRowId = db.insert("nhanvien", null, values);
+                if (newRowId == -1) {
+                    Toast.makeText(themnv.this, "Lỗi khi thêm nhân viên", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(themnv.this, "Thêm nhân viên thành công", Toast.LENGTH_SHORT).show();
+                }
+                db.close(); // Đóng database sau khi sử dụng
             }
         });
     }
