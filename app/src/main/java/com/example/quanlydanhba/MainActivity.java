@@ -1,8 +1,10 @@
 package com.example.quanlydanhba;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,12 +20,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ListView lv;
-    nhanvienAdapter nhanvienAdapter;
-    donviAdapter donviAdapter;
-
+    ContactAdapter contactAdapter;
     SQLiteDatabase mydatabase;
     FloatingActionButton btnThem;
     TabLayout tabLayout;
@@ -34,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv=findViewById(R.id.lv);
-        donviAdapter = new donviAdapter(this, new ArrayList<>());
-        nhanvienAdapter = new nhanvienAdapter(this, new ArrayList<>());
-        lv.setAdapter(nhanvienAdapter);
+        contactAdapter = new ContactAdapter(this, new ArrayList<>());
+        lv.setAdapter(contactAdapter);
         btnThem = findViewById(R.id.btnThem);
         tabLayout = findViewById(R.id.tabLayout);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -44,14 +44,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        mydatabase = openOrCreateDatabase("qldb.db", MODE_PRIVATE, null);
-        int selectedTabPosition = tabLayout.getSelectedTabPosition();
 
-        if (selectedTabPosition == 0) { // Tab "Đơn vị"
-            lv.setAdapter(donviAdapter);
-        } else { // Tab "Nhân viên"
-            lv.setAdapter(nhanvienAdapter);
-        }
 
         btnThem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +59,65 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // Mở database
+        mydatabase = openOrCreateDatabase("qldb.db", MODE_PRIVATE, null);
 
+        try {
+            String sql ="CREATE TABLE tbllop(malop TEXT primary key, tenlop TEXT, siso INTEGER)";
+            mydatabase.execSQL(sql);
+        }catch (Exception e){
+            Log.e("Error", "Table da ton tai");
+        }
+        // Bắt sự kiện đổi tab
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                loadContacts(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        loadContacts(0);
+    }
+    private void loadContacts(int tabPosition) {
+        String tableName = (tabPosition == 0) ? "donvi" : "nhanvien"; // Tên bảng trong database
+        String query;
+        if (tabPosition == 0) {
+            // Truy vấn tên đơn vị
+            query = "SELECT tendv FROM " + tableName + " ORDER BY tendv ASC";
+        } else {
+            // Truy vấn tên nhân viên và tên đơn vị
+            query = "SELECT hoten, tendv FROM nhanvien nv " +
+                    "JOIN donvi dv ON nv.madv = dv.madv " +
+                    "ORDER BY hoten ASC";
+        }
+        Cursor cursor = mydatabase.rawQuery(query, null);
+
+        List<Contact> contacts = new ArrayList<>();
+        if (tabPosition == 0) {
+            // Tạo đối tượng Contact cho đơn vị
+            while (cursor.moveToNext()) {
+                String tenDonVi = cursor.getString(cursor.getColumnIndexOrThrow("tendv"));
+                contacts.add(new Contact(tenDonVi));
+            }
+        } else {
+            // Tạo đối tượng Contact cho nhân viên
+            while (cursor.moveToNext()) {
+                String tenNhanVien = cursor.getString(cursor.getColumnIndexOrThrow("hoten"));
+                String tenDonVi = cursor.getString(cursor.getColumnIndexOrThrow("tendv"));
+                contacts.add(new Contact(tenNhanVien, tenDonVi));
+            }
+        }
+        cursor.close();
+
+        contactAdapter.clear();
+        contactAdapter.addAll(contacts);
+        contactAdapter.notifyDataSetChanged();
     }
 }
