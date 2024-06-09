@@ -2,11 +2,15 @@ package com.example.quanlydanhba;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -18,19 +22,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class themnv extends AppCompatActivity {
     ImageView btnThoat,btnLuu;
-    EditText edtTenNV, edtChucVu, edtSDT, edtEmail;
+    EditText edtTenNV, edtChucVu, edtSDT, edtEmail,edtDonVi;
     Spinner spinnerDonVi;
+    List<String> donViNames;
+    List<Integer> donViIds;
     private boolean isAllFieldsFilled = false;
-    DbHelper databaseHelper;
+    private String tenNV, chucVu, sdt, email;
+    int donVi;
+    private DbHelper dbHelper;
+    private Uri imageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_themnv);
 
-        databaseHelper = new DbHelper(this);
+        dbHelper = new DbHelper(this);
 
         btnThoat = findViewById(R.id.btnThoat);
         btnLuu = findViewById(R.id.btnLuu);
@@ -46,6 +58,28 @@ public class themnv extends AppCompatActivity {
         edtSDT.addTextChangedListener(watcher);
         edtEmail.addTextChangedListener(watcher);
 
+
+        Cursor cursor = dbHelper.getDonViSpiner();
+        donViNames = new ArrayList<>();
+        donViIds = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndex(Constants.dv_tendv)); // Lấy tên đơn vị
+                donViNames.add(name);
+                int id = cursor.getInt(cursor.getColumnIndex(Constants.dv_id)); // Lấy mã đơn vị
+                donViIds.add(id);
+            } while (cursor.moveToNext());
+        }else{
+            Toast.makeText(this, "Không có dữ liệu", Toast.LENGTH_SHORT).show();
+        }
+        cursor.close();
+        dbHelper.close();
+        // Tạo ArrayAdapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, donViNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Gán ArrayAdapter cho Spinner
+        spinnerDonVi.setAdapter(adapter);
 
         // Initial check for all EditText fields
         checkFieldsForEmptyValues();
@@ -68,34 +102,29 @@ public class themnv extends AppCompatActivity {
         btnLuu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tenNV = edtTenNV.getText().toString();
-                String chucVu = edtChucVu.getText().toString();
-                String sdt = edtSDT.getText().toString();
-                String email = edtEmail.getText().toString();
-                int madv = spinnerDonVi.getSelectedItemPosition(); // Giả sử Spinner trả về madv
-
-                if (tenNV.isEmpty() || sdt.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(themnv.this, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put("hoten", tenNV);
-                values.put("chucvu", chucVu);
-                values.put("email", email);
-                values.put("sdt", sdt);
-                values.put("anhdd", ""); // Thay thế bằng đường dẫn ảnh nếu có
-                values.put("madv", madv);
-                long newRowId = db.insert("nhanvien", null, values);
-                if (newRowId == -1) {
-                    Toast.makeText(themnv.this, "Lỗi khi thêm nhân viên", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(themnv.this, "Thêm nhân viên thành công", Toast.LENGTH_SHORT).show();
-                }
-                db.close(); // Đóng database sau khi sử dụng
+                saveData();
             }
         });
+
+
+
+    }
+    private void saveData() {
+        tenNV = edtTenNV.getText().toString().trim();
+        email = edtEmail.getText().toString().trim();
+        sdt = edtSDT.getText().toString().trim();
+        chucVu = edtChucVu.getText().toString().trim();
+        int donVi = donViIds.get(spinnerDonVi.getSelectedItemPosition());
+        long id =  dbHelper.insertNV(
+                ""+imageUri,
+                ""+tenNV,
+                ""+sdt,
+                ""+email,
+                ""+chucVu,
+                ""+donVi);
+
+        Toast.makeText(getApplicationContext(), "Inserted "+id, Toast.LENGTH_SHORT).show();
+
     }
     private final TextWatcher watcher = new TextWatcher() {
         @Override
