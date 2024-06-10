@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class activity_xemnv extends AppCompatActivity {
     ImageView btnThoat, btnSua;
-    int nhanvienId = getIntent().getIntExtra("nhanvienId", -1);
+    int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,41 +29,7 @@ public class activity_xemnv extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-         // -1 là giá trị mặc định nếu không tìm thấy
-        if (nhanvienId != -1) {
-            // Tiếp tục xử lý với donviId
-            DbHelper dbHelper = new DbHelper(this);
-            Cursor cursor = dbHelper.getNhanVienById(nhanvienId); // Tạo hàm getNhanVienById trong DbHelper
-
-            if (cursor.moveToFirst()) {
-                String tennv = cursor.getString(cursor.getColumnIndex(Constants.nv_tennv));
-                String chucvu = cursor.getString(cursor.getColumnIndex(Constants.nv_chucvu));
-                String donvi = cursor.getString(cursor.getColumnIndex("donvi_ten"));
-                String anhdd = cursor.getString(cursor.getColumnIndex(Constants.nv_anhdd));
-                String sdt = cursor.getString(cursor.getColumnIndex(Constants.nv_sdt));
-                String email = cursor.getString(cursor.getColumnIndex(Constants.nv_email));
-
-                // ... Lấy các thông tin khác
-                TextView tvSDT = findViewById(R.id.tvsdt);
-                tvSDT.setText(sdt); // Thay R.id.tvSDT bằng ID thực tế
-
-                TextView tvTenNV = findViewById(R.id.tvTenNV); // Thay R.id.tvTenNV bằng ID thực tế
-                tvTenNV.setText(tennv);
-
-                TextView tvChucVu = findViewById(R.id.tvChucVu); // Thay R.id.tvChucVu bằng ID thực tế
-                tvChucVu.setText(chucvu);
-
-                TextView tvDV = findViewById(R.id.tvDV); // Thay R.id.tvChucVu bằng ID thực tế
-                tvDV.setText(donvi);
-                TextView tvEmail = findViewById(R.id.tvEmail); // Thay R.id.tvChucVu bằng ID thực tế
-                tvEmail.setText(email);
-
-                ImageView imgAnhNV = findViewById(R.id.imgHinhAnh);
-                imgAnhNV.setImageURI(Uri.parse(anhdd));
-                // ... Hiển thị các thông tin khác
-            } else {
-                // Xử lý trường hợp không nhận được donviId (ví dụ: hiển thị thông báo lỗi)
-            }
+        reload();
             btnThoat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,9 +43,49 @@ public class activity_xemnv extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent;
                     intent = new Intent(activity_xemnv.this, suanv.class);
+                    intent.putExtra("nhanvienId", id);
                     startActivity(intent);
                 }
             });
+        }
+        private void reload(){
+            int nhanvienId = getIntent().getIntExtra("nhanvienId", -1);
+            id = nhanvienId;
+            // -1 là giá trị mặc định nếu không tìm thấy
+            if (nhanvienId != -1) {
+                // Tiếp tục xử lý với donviId
+                DbHelper dbHelper = new DbHelper(this);
+                Cursor cursor = dbHelper.getNhanVienById(nhanvienId); // Tạo hàm getNhanVienById trong DbHelper
+
+                if (cursor.moveToFirst()) {
+                    String tennv = cursor.getString(cursor.getColumnIndex(Constants.nv_tennv));
+                    String chucvu = cursor.getString(cursor.getColumnIndex(Constants.nv_chucvu));
+                    String donvi = cursor.getString(cursor.getColumnIndex("donvi_ten"));
+                    String anhdd = cursor.getString(cursor.getColumnIndex(Constants.nv_anhdd));
+                    String sdt = cursor.getString(cursor.getColumnIndex(Constants.nv_sdt));
+                    String email = cursor.getString(cursor.getColumnIndex(Constants.nv_email));
+
+                    // ... Lấy các thông tin khác
+                    TextView tvSDT = findViewById(R.id.tvsdt);
+                    tvSDT.setText(sdt); // Thay R.id.tvSDT bằng ID thực tế
+
+                    TextView tvTenNV = findViewById(R.id.tvTenNV); // Thay R.id.tvTenNV bằng ID thực tế
+                    tvTenNV.setText(tennv);
+
+                    TextView tvChucVu = findViewById(R.id.tvChucVu); // Thay R.id.tvChucVu bằng ID thực tế
+                    tvChucVu.setText(chucvu);
+
+                    TextView tvDV = findViewById(R.id.tvDV); // Thay R.id.tvChucVu bằng ID thực tế
+                    tvDV.setText(donvi);
+                    TextView tvEmail = findViewById(R.id.tvEmail); // Thay R.id.tvChucVu bằng ID thực tế
+                    tvEmail.setText(email);
+
+                    ImageView imgAnhNV = findViewById(R.id.imgHinhAnh);
+                    imgAnhNV.setImageURI(Uri.parse(anhdd));
+                    // ... Hiển thị các thông tin khác
+                } else {
+                    // Xử lý trường hợp không nhận được donviId (ví dụ: hiển thị thông báo lỗi)
+                }
         }
     }
 }

@@ -146,7 +146,7 @@ public class themnv extends AppCompatActivity {
 
         String imagePath = getRealPathFromURI(selectedImageUri);
         long id = dbHelper.insertNV(
-                "" + imagePath, // Use the selected image URI here
+                "" + "", // Use the selected image URI here
                 "" + tenNV,
                 "" + sdt,
                 "" + email,

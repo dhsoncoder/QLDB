@@ -117,7 +117,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     public Cursor getNhanVienById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT nv.*, dv.tendv AS donvi_ten " +
+        return db.rawQuery("SELECT nv.*, dv.tendv AS donvi_ten ,dv.madv AS donvi_id "+
                 "FROM " + Constants.TABLE_NAME_NV + " nv " +
                 "JOIN " + Constants.TABLE_NAME + " dv ON nv." + Constants.nv_madv + " = dv." + Constants.dv_id + " " +
                 "WHERE nv." + Constants.nv_id + " = ?", new String[]{String.valueOf(id)});
@@ -141,5 +141,21 @@ public class DbHelper extends SQLiteOpenHelper {
         int rowsAffected = db.update(Constants.TABLE_NAME, values, Constants.dv_id + " = ?", new String[]{String.valueOf(madv)});
         db.close();
         return rowsAffected > 0; // Return true if update was successful
+    }
+    public boolean updateNV(int id, String image, String name, String phone, String email, String chucvu, String madv) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(Constants.nv_anhdd, image);
+        contentValues.put(Constants.nv_tennv, name);
+        contentValues.put(Constants.nv_sdt, phone);
+        contentValues.put(Constants.nv_email, email);
+        contentValues.put(Constants.nv_chucvu, chucvu);
+        contentValues.put(Constants.nv_madv, madv);
+
+        int rowsAffected = db.update("nhanvien", contentValues, Constants.nv_id + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+
+        return rowsAffected > 0; // Return true if the update was successful
     }
 }
