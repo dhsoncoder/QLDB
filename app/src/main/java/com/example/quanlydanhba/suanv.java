@@ -1,8 +1,11 @@
 package com.example.quanlydanhba;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -29,9 +32,9 @@ public class suanv extends AppCompatActivity {
     CardView btnThemAnh;
     private boolean isAllFieldsFilled = false;
     private DbHelper dbHelper;
-    int madv;
     String newTenNV,newSdt, newEmail, newChucVu;
-    String logo="";
+    ImageView imgHinhAnh;
+    private Uri selectedImageUri;
     int id,newDonVi;
 
     @Override
@@ -40,7 +43,7 @@ public class suanv extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_suanv);
 
-
+        imgHinhAnh = findViewById(R.id.imgHinhAnh);
         btnThoat = findViewById(R.id.btnThoat);
         btnLuu = findViewById(R.id.btnLuu);
         edtTenNV = findViewById(R.id.edtTenNV);
@@ -88,7 +91,16 @@ public class suanv extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnThemAnh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an intent to open image gallery
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 1);
+            }
+        });
         reload();
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -123,6 +135,19 @@ public class suanv extends AppCompatActivity {
             // Xử lý trường hợp không nhận được donviId
         }
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            selectedImageUri = data.getData(); // Get the URI of the selected image
+            if (selectedImageUri != null) {
+                // Set the selected image to the ImageView
+                imgHinhAnh.setImageURI(selectedImageUri);
+
+            }
+        }
+    }
     private void saveData() {
         if (id != -1) {
             DbHelper dbHelper = new DbHelper(this);
@@ -132,7 +157,8 @@ public class suanv extends AppCompatActivity {
             newSdt = edtSDT.getText().toString();
             newChucVu = edtChucVu.getText().toString();
             newDonVi = donViIds.get(spinnerDonVi.getSelectedItemPosition());
-            boolean isUpdated = dbHelper.updateNV(id, newTenNV,newChucVu, newEmail,newSdt, "", newDonVi);
+            String imageUriString = selectedImageUri != null ? selectedImageUri.toString() : "";
+            boolean isUpdated = dbHelper.updateNV(id, newTenNV,newChucVu, newEmail,newSdt, imageUriString, newDonVi);
             if (isUpdated) {
                 Toast.makeText(this, "Cập nhat thành oong", Toast.LENGTH_SHORT).show();
             } else {

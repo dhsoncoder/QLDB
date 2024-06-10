@@ -108,7 +108,7 @@ public class themdv extends AppCompatActivity {
                 ""+website,
                 ""+diachi,
                 ""+madvcha);
-        Toast.makeText(getApplicationContext(), "Inserted "+id, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Inserted thanh cong lien lac voi id "+id, Toast.LENGTH_SHORT).show();
 
     }
     private final TextWatcher watcher = new TextWatcher() {

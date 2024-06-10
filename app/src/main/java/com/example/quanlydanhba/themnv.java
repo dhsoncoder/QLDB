@@ -36,7 +36,7 @@ public class themnv extends AppCompatActivity {
     List<Integer> donViIds;
     CardView btnThemAnh;
     private boolean isAllFieldsFilled = false;
-    private String tenNV, chucVu, sdt, email;
+    private String tenNV, chucVu, sdt, email,urlanh;
     int donVi;
     private DbHelper dbHelper;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
@@ -130,6 +130,7 @@ public class themnv extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.getData(); // Get the URI of the selected image
             if (selectedImageUri != null) {
+                urlanh = selectedImageUri.getPath();
                 // Set the selected image to the ImageView
                 imgHinhAnh.setImageURI(selectedImageUri);
 
@@ -143,10 +144,9 @@ public class themnv extends AppCompatActivity {
         sdt = edtSDT.getText().toString().trim();
         chucVu = edtChucVu.getText().toString().trim();
         int donVi = donViIds.get(spinnerDonVi.getSelectedItemPosition());
-
-        String imagePath = getRealPathFromURI(selectedImageUri);
+        String imageUriString = selectedImageUri != null ? selectedImageUri.toString() : "";
         long id = dbHelper.insertNV(
-                "" + "", // Use the selected image URI here
+                "" + imageUriString, // Use the selected image URI here
                 "" + tenNV,
                 "" + sdt,
                 "" + email,

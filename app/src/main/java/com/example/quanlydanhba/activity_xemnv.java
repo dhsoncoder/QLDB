@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class activity_xemnv extends AppCompatActivity {
     ImageView btnThoat, btnSua;
     int id;
+    ImageView imgHinhAnh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,7 @@ public class activity_xemnv extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        imgHinhAnh = findViewById(R.id.imgHinhAnh);
         reload();
             btnThoat.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,6 +83,7 @@ public class activity_xemnv extends AppCompatActivity {
                     tvEmail.setText(email);
 
                     ImageView imgAnhNV = findViewById(R.id.imgHinhAnh);
+
                     imgAnhNV.setImageURI(Uri.parse(anhdd));
                     // ... Hiển thị các thông tin khác
                 } else {

@@ -13,11 +13,6 @@
         android:text="Tên đơn vị"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/email_don_vi_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email đơn vị"
-        android:textSize="18sp" />
+
 
 </LinearLayout>
