@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
             int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));
-            intent.putExtra("manv", donviId);
+            intent.putExtra("donviId", donviId);
             startActivity(intent);
         });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
                         int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));
-                        intent.putExtra("manv", donviId);
+                        intent.putExtra("donviId", donviId);
                         startActivity(intent);
                     });
                 } else {

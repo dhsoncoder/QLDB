@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class activity_xemdv extends AppCompatActivity {
     ImageView btnThoat, btnSua;
-
+    int id ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +28,8 @@ public class activity_xemdv extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        int donviId = getIntent().getIntExtra("manv", -1); // Sửa tên khóa Intent
+        int donviId = getIntent().getIntExtra("donviId", -1);
+        id = donviId;// Sửa tên khóa Intent
         if (donviId != -1) {
             DbHelper dbHelper = new DbHelper(this);
             Cursor cursor = dbHelper.getDonViById(donviId);
@@ -68,11 +69,12 @@ public class activity_xemdv extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-            btnSua.setOnClickListener(new View.OnClickListener() {
+        btnSua.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent;
-                    intent = new Intent(activity_xemdv.this, suanv.class);
+                    intent = new Intent(activity_xemdv.this, activity_suadv.class);
+                    intent.putExtra("donviId", id);
                     startActivity(intent);
                 }
             });

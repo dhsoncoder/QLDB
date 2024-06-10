@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class activity_xemnv extends AppCompatActivity {
     ImageView btnThoat, btnSua;
-
+    int nhanvienId = getIntent().getIntExtra("nhanvienId", -1);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +29,7 @@ public class activity_xemnv extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        int nhanvienId = getIntent().getIntExtra("nhanvienId", -1); // -1 là giá trị mặc định nếu không tìm thấy
+         // -1 là giá trị mặc định nếu không tìm thấy
         if (nhanvienId != -1) {
             // Tiếp tục xử lý với donviId
             DbHelper dbHelper = new DbHelper(this);

@@ -127,4 +127,19 @@ public class DbHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM " + Constants.TABLE_NAME + " WHERE " + Constants.dv_id + " = ?", new String[]{String.valueOf(id)});
 
     }
+    public boolean updateDonViById(int madv, String newTendv, String newLogo, String newSdt, String newEmail, String newWebsite, String newDiachi, String newMadvcha) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.dv_tendv, newTendv);
+        values.put(Constants.dv_logo, newLogo);
+        values.put(Constants.dv_sdt, newSdt);
+        values.put(Constants.dv_email, newEmail);
+        values.put(Constants.dv_website, newWebsite);
+        values.put(Constants.dv_diachi, newDiachi);
+        values.put(Constants.dv_madvcha, newMadvcha);
+
+        int rowsAffected = db.update(Constants.TABLE_NAME, values, Constants.dv_id + " = ?", new String[]{String.valueOf(madv)});
+        db.close();
+        return rowsAffected > 0; // Return true if update was successful
+    }
 }
