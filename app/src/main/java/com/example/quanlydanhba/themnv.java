@@ -1,11 +1,13 @@
 package com.example.quanlydanhba;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,11 +34,14 @@ public class themnv extends AppCompatActivity {
     Spinner spinnerDonVi;
     List<String> donViNames;
     List<Integer> donViIds;
+    CardView btnThemAnh;
     private boolean isAllFieldsFilled = false;
     private String tenNV, chucVu, sdt, email;
     int donVi;
     private DbHelper dbHelper;
-    private Uri imageUri;
+    private static final int REQUEST_CODE_PICK_IMAGE = 1;
+    private ImageView imgHinhAnh;
+    private Uri selectedImageUri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +57,13 @@ public class themnv extends AppCompatActivity {
         edtSDT = findViewById(R.id.edtSDT);
         edtEmail = findViewById(R.id.edtEmail);
         spinnerDonVi = findViewById(R.id.spinner);
-
+        btnThemAnh = findViewById(R.id.btnThemAnh);
         // Set a TextWatcher for each EditText
         edtTenNV.addTextChangedListener(watcher);
         edtChucVu.addTextChangedListener(watcher);
         edtSDT.addTextChangedListener(watcher);
         edtEmail.addTextChangedListener(watcher);
-
+        imgHinhAnh = findViewById(R.id.imgHinhAnh);
 
         Cursor cursor = dbHelper.getDonViSpiner();
         donViNames = new ArrayList<>();
@@ -105,23 +111,44 @@ public class themnv extends AppCompatActivity {
                 saveData();
             }
         });
-
+        btnThemAnh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an intent to open image gallery
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+            }
+        });
 
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            selectedImageUri = data.getData(); // Get the URI of the selected image
+            if (selectedImageUri != null) {
+                // Set the selected image to the ImageView
+                imgHinhAnh.setImageURI(selectedImageUri);
+            }
+        }
+    }
+
     private void saveData() {
         tenNV = edtTenNV.getText().toString().trim();
         email = edtEmail.getText().toString().trim();
         sdt = edtSDT.getText().toString().trim();
         chucVu = edtChucVu.getText().toString().trim();
         int donVi = donViIds.get(spinnerDonVi.getSelectedItemPosition());
-        long id =  dbHelper.insertNV(
-                ""+imageUri,
-                ""+tenNV,
-                ""+sdt,
-                ""+email,
-                ""+chucVu,
-                ""+donVi);
+        long id = dbHelper.insertNV(
+                "" + selectedImageUri, // Use the selected image URI here
+                "" + tenNV,
+                "" + sdt,
+                "" + email,
+                "" + chucVu,
+                "" + donVi);
 
         Toast.makeText(getApplicationContext(), "Inserted "+id, Toast.LENGTH_SHORT).show();
 
