@@ -82,14 +82,14 @@ public class DbHelper extends SQLiteOpenHelper {
     public boolean updateNV(int manv, String tennv, String chucvu, String email, String sdt, String anhdd, int madv) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(ConstantsNV.nv_tennv, tennv);
-        values.put(ConstantsNV.nv_chucvu, chucvu);
-        values.put(ConstantsNV.nv_email, email);
-        values.put(ConstantsNV.nv_sdt, sdt);
-        values.put(ConstantsNV.nv_anhdd, anhdd);
-        values.put(ConstantsNV.nv_madv, madv);
+        values.put(Constants.nv_tennv, tennv);
+        values.put(Constants.nv_chucvu, chucvu);
+        values.put(Constants.nv_email, email);
+        values.put(Constants.nv_sdt, sdt);
+        values.put(Constants.nv_anhdd, anhdd);
+        values.put(Constants.nv_madv, madv);
 
-        int rowsAffected = db.update(ConstantsNV.TABLE_NAME_NV, values, ConstantsNV.nv_id + " = ?", new String[]{String.valueOf(manv)});
+        int rowsAffected = db.update(Constants.TABLE_NAME_NV, values, Constants.nv_id + " = ?", new String[]{String.valueOf(manv)});
         db.close();
         return rowsAffected > 0; // Trả về true nếu cập nhật thành công
     }
@@ -117,7 +117,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     public Cursor getNhanVienById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM " + Constants.TABLE_NAME_NV + " WHERE " + ConstantsNV.nv_id + " = ?", new String[]{String.valueOf(id)});
+        return db.rawQuery("SELECT * FROM " + Constants.TABLE_NAME_NV + " WHERE " + Constants.nv_id + " = ?", new String[]{String.valueOf(id)});
     }
     public Cursor getDonViById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();

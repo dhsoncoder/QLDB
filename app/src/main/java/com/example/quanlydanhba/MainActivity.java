@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DbHelper(this);
 
-        lvDonVi =findViewById(R.id.lv);
+
         lvNhanVien = findViewById(R.id.lv);
 
 
@@ -73,8 +73,24 @@ public class MainActivity extends AppCompatActivity {
                 int selectedTabPosition = tab.getPosition();
                 if (selectedTabPosition == 0) {
                     hienThiDanhSachDonVi();
+                    lvNhanVien.setOnItemClickListener((parent, view, position, id) -> {
+                        Intent intent = new Intent(MainActivity.this, activity_xemnv.class);
+                        Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+
+                        int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));
+                        intent.putExtra("manv", donviId);
+                        startActivity(intent);
+                    });
                 } else {
                     hienThiDanhSachNhanVien();
+                    lvNhanVien.setOnItemClickListener((parent, view, position, id) -> {
+                        Intent intent = new Intent(MainActivity.this, activity_xemnv.class);
+                        Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+
+                        int nhanvienId = cursor.getInt(cursor.getColumnIndex(Constants.nv_id));
+                        intent.putExtra("nhanvienId", nhanvienId);
+                        startActivity(intent);
+                    });
                 }
             }
 
@@ -89,22 +105,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // Bắt sự kiện click vào item trên listview sẽ đổi sang view chi tiet donvi
-        lvDonVi.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainActivity.this, activity_xemdv.class);
-            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
-            int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));
-            intent.putExtra("donviId", donviId);
-            startActivity(intent);
-        });
-        lvNhanVien.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(MainActivity.this, activity_xemnv.class);
-            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
-            int nhanvienId = cursor.getInt(cursor.getColumnIndex(Constants.nv_id));
-            intent.putExtra("nhanvienId", nhanvienId);
-            startActivity(intent);
-        });
 
         // Bắt sự kiện đổi tab
 
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         int[] toViews = {R.id.ten_don_vi_textview, R.id.email_don_vi_textview}; // ID của các TextView trong don_vi_item.xml
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.don_vi_item, cursor, fromColumns, toViews, 0);
-        lvDonVi.setAdapter(adapter);
+        lvNhanVien.setAdapter(adapter);
     }
 
     private void hienThiDanhSachNhanVien() {
