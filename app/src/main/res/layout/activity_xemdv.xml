@@ -25,8 +25,20 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.83"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout1"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_update" />
+
+    <ImageView
+        android:id="@+id/btnXoa"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="272dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_remove" />
 
 
     <LinearLayout

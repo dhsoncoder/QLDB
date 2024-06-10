@@ -1,11 +1,14 @@
 package com.example.quanlydanhba;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +17,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class activity_xemdv extends AppCompatActivity {
-    ImageView btnThoat, btnSua;
+    ImageView btnThoat, btnSua,btnXoa;
     int id ;
+    private DbHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +27,7 @@ public class activity_xemdv extends AppCompatActivity {
         setContentView(R.layout.activity_xemdv);
         btnThoat = findViewById(R.id.btnThoat);
         btnSua = findViewById(R.id.btnSua);
+        btnXoa = findViewById(R.id.btnXoa);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -78,6 +83,43 @@ public class activity_xemdv extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
+        btnXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create the confirmation dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder( activity_xemdv.this);
+                builder.setTitle("Xác nhận xóa");
+                builder.setMessage("Bạn có chắc chắn muốn xóa bản ghi này?");
+
+                // Set positive button (OK)
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Perform deletion logic here
+                        dbHelper = new DbHelper(activity_xemdv.this);
+                        boolean result = dbHelper.deleteDonViById(id);
+                        if ( result){
+                        Toast.makeText(getApplicationContext(), "Đã xóa bản ghi!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(activity_xemdv.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Xóa bản ghi thất bại!", Toast.LENGTH_SHORT).show();
+                    }}
+                });
+
+                // Set negative button (Cancel)
+                builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing, just close the dialog
+                        dialog.dismiss();
+                    }
+                });
+
+                // Show the dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
         }
     }
 

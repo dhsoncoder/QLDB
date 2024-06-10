@@ -158,4 +158,16 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return rowsAffected > 0; // Return true if the update was successful
     }
+    public boolean deleteDonViById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(Constants.TABLE_NAME, Constants.dv_id + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0; // Return true if the delete was successful
+    }
+    public boolean deleteNVById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(Constants.TABLE_NAME_NV, Constants.nv_id + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return rowsAffected > 0; // Return true if the delete was successful
+    }
 }
