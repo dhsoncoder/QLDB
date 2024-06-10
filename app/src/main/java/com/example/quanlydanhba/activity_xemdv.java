@@ -28,16 +28,29 @@ public class activity_xemdv extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        int donviId = getIntent().getIntExtra("donviId", -1); // Sửa tên khóa Intent
+        int donviId = getIntent().getIntExtra("manv", -1); // Sửa tên khóa Intent
         if (donviId != -1) {
             DbHelper dbHelper = new DbHelper(this);
             Cursor cursor = dbHelper.getDonViById(donviId);
 
             if (cursor.moveToFirst()) { // Di chuyển Cursor đến vị trí đầu tiên
                 // Lấy dữ liệu từ Cursor và hiển thị lên TextView
-                TextView tenDonViTextView = findViewById(R.id.ten_don_vi_textview); // Thay thế bằng ID TextView của bạn
+                TextView tenDonViTextView = findViewById(R.id.tvDV); // Thay thế bằng ID TextView của bạn
                 tenDonViTextView.setText(cursor.getString(cursor.getColumnIndex(Constants.dv_tendv)));
 
+                TextView email = findViewById(R.id.tvEmail);
+                email.setText(cursor.getString(cursor.getColumnIndex(Constants.dv_email)));
+
+                TextView dienThoai = findViewById(R.id.tvsdt);
+                dienThoai.setText(cursor.getString(cursor.getColumnIndex(Constants.dv_sdt)));
+
+                TextView website = findViewById(R.id.tvWebsite);
+                website.setText(cursor.getString(cursor.getColumnIndex(Constants.dv_website)));
+
+                TextView diaChi = findViewById(R.id.tvDC);
+                diaChi.setText(cursor.getString(cursor.getColumnIndex(Constants.dv_diachi)));
+
+                // Thay thế bằng ID TextView của bạn
                 // ... Hiển thị các thông tin khác tương tự
             }
 

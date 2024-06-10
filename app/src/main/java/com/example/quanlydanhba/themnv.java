@@ -132,6 +132,7 @@ public class themnv extends AppCompatActivity {
             if (selectedImageUri != null) {
                 // Set the selected image to the ImageView
                 imgHinhAnh.setImageURI(selectedImageUri);
+
             }
         }
     }
@@ -142,8 +143,10 @@ public class themnv extends AppCompatActivity {
         sdt = edtSDT.getText().toString().trim();
         chucVu = edtChucVu.getText().toString().trim();
         int donVi = donViIds.get(spinnerDonVi.getSelectedItemPosition());
+
+        String imagePath = getRealPathFromURI(selectedImageUri);
         long id = dbHelper.insertNV(
-                "" + selectedImageUri, // Use the selected image URI here
+                "" + imagePath, // Use the selected image URI here
                 "" + tenNV,
                 "" + sdt,
                 "" + email,
@@ -181,5 +184,17 @@ public class themnv extends AppCompatActivity {
         } else {
             btnLuu.setImageResource(R.drawable.ic_done); // Change back to the original icon
         }
+    }
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String imagePath = cursor.getString(column_index);
+            cursor.close();
+            return imagePath;
+        }
+        return null;
     }
 }

@@ -60,7 +60,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/tvTenNV"
+            android:id="@+id/tvDV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SOEN"
@@ -73,7 +73,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="70dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +91,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv"
+                    android:id="@+id/tvsdt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="094 64"
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Email"
+                    android:text="Số điện thoại"
                     android:textColor="#888"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -152,6 +152,36 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvWebsite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="abc@gmail.com"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Website"
+                    android:textColor="#888"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -166,7 +196,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvDV"
+                    android:id="@+id/tvDC"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DH Thuy Loi"
@@ -176,7 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Đơn vị"
+                    android:text="Địa chỉ"
                     android:textColor="#888"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -194,17 +224,17 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvChucVu"
+                    android:id="@+id/tvDVC"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bảo vệ"
+                    android:text=""
                     android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Chức vụ"
+                    android:text=""
                     android:textColor="#888"
                     android:textSize="16sp" />
             </LinearLayout>

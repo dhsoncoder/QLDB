@@ -67,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        lvNhanVien.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(MainActivity.this, activity_xemdv.class);
+            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+
+            int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));
+            intent.putExtra("manv", donviId);
+            startActivity(intent);
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -74,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedTabPosition == 0) {
                     hienThiDanhSachDonVi();
                     lvNhanVien.setOnItemClickListener((parent, view, position, id) -> {
-                        Intent intent = new Intent(MainActivity.this, activity_xemnv.class);
+                        Intent intent = new Intent(MainActivity.this, activity_xemdv.class);
                         Cursor cursor = (Cursor) parent.getItemAtPosition(position);
 
                         int donviId = cursor.getInt(cursor.getColumnIndex(Constants.dv_id));

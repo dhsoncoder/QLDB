@@ -117,10 +117,14 @@ public class DbHelper extends SQLiteOpenHelper {
     }
     public Cursor getNhanVienById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM " + Constants.TABLE_NAME_NV + " WHERE " + Constants.nv_id + " = ?", new String[]{String.valueOf(id)});
+        return db.rawQuery("SELECT nv.*, dv.tendv AS donvi_ten " +
+                "FROM " + Constants.TABLE_NAME_NV + " nv " +
+                "JOIN " + Constants.TABLE_NAME + " dv ON nv." + Constants.nv_madv + " = dv." + Constants.dv_id + " " +
+                "WHERE nv." + Constants.nv_id + " = ?", new String[]{String.valueOf(id)});
     }
     public Cursor getDonViById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + Constants.TABLE_NAME + " WHERE " + Constants.dv_id + " = ?", new String[]{String.valueOf(id)});
+
     }
 }

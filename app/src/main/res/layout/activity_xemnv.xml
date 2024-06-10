@@ -53,6 +53,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/imgHinhAnh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="13dp"
@@ -74,7 +75,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="80dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,7 +93,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv"
+                    android:id="@+id/tvsdt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="094 64"
